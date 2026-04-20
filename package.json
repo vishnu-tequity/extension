@@ -3,7 +3,7 @@
   "displayName": "AI Hover Explainer",
   "description": "AI-powered symbol explanations on hover, powered by local Ollama (no API key, no internet needed)",
   "version": "0.0.1",
-  "publisher": "your-publisher-name",
+  "publisher": "vishnu-tequity",
   "engines": {
     "vscode": "^1.85.0"
   },
