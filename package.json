@@ -1,7 +1,7 @@
 {
-  "name": "ai-hover-explainer",
-  "displayName": "AI Hover Explainer",
-  "description": "AI-powered symbol explanations on hover, powered by local Ollama (no API key, no internet needed)",
+  "name": "codeguardian-ai",
+  "displayName": "CodeGuardian AI",
+  "description": "AI-powered code guardian — hover explanations, SOLID principle violations & space complexity analyzer powered by local Ollama (no API key, no internet needed)",
   "version": "0.0.1",
   "publisher": "vishnu-tequity",
   "engines": {
