@@ -17,7 +17,7 @@ export const CONFIG_KEY_API_KEY = "apiKey";
 export const CONFIG_KEY_SERVER_URL = "ollamaUrl";
 export const CONFIG_KEY_MODEL = "model";
 
-export const DEFAULT_OLLAMA_URL = "http://localhost:11434/v1";
+export const DEFAULT_OLLAMA_URL = "http://192.168.1.32:11434/v1";
 export const DEFAULT_MODEL = "codellama";
 
 export const COMMAND_SET_API_KEY = "aiHover.setApiKey";
