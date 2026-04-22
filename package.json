@@ -20,12 +20,7 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "aiHover.setApiKey",
-        "title": "AI Hover: Settings"
-      }
-    ],
+    "commands": [],
     "configuration": {
       "title": "AI Hover Explainer",
       "properties": {

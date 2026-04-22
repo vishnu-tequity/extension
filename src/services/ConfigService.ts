@@ -1,9 +1,8 @@
 import * as vscode from "vscode";
-import { IEnabledConfig, IServerConfig, IApiKeyConfig } from "../types/index";
+import { IEnabledConfig, IServerConfig } from "../types/index";
 import {
   CONFIG_SECTION,
   CONFIG_KEY_ENABLED,
-  CONFIG_KEY_API_KEY,
   CONFIG_KEY_SERVER_URL,
   CONFIG_KEY_MODEL,
   DEFAULT_OLLAMA_URL,
@@ -16,7 +15,7 @@ import {
  * Implements all three narrow config interfaces (ISP) so extension.ts can
  * pass the same instance to whichever consumer needs it, typed correctly.
  */
-export class ConfigService implements IEnabledConfig, IServerConfig, IApiKeyConfig {
+export class ConfigService implements IEnabledConfig, IServerConfig {
   private get config() {
     return vscode.workspace.getConfiguration(CONFIG_SECTION);
   }
@@ -31,9 +30,5 @@ export class ConfigService implements IEnabledConfig, IServerConfig, IApiKeyConf
 
   getModel(): string {
     return this.config.get<string>(CONFIG_KEY_MODEL, DEFAULT_MODEL);
-  }
-
-  getApiKey(): string {
-    return this.config.get<string>(CONFIG_KEY_API_KEY, "");
   }
 }

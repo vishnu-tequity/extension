@@ -29,7 +29,6 @@ export interface IAIService {
  *
  * AIHoverProvider needs: IEnabledConfig (is the feature on?)
  * OllamaAIService needs: IServerConfig (where is the server, which model?)
- * SetApiKeyCommand needs: IApiKeyConfig (read/write the API key)
  */
 
 /** Whether the extension is enabled — used by AIHoverProvider. */
@@ -41,11 +40,6 @@ export interface IEnabledConfig {
 export interface IServerConfig {
   getServerUrl(): string;
   getModel(): string;
-}
-
-/** API key storage — used by SetApiKeyCommand. */
-export interface IApiKeyConfig {
-  getApiKey(): string;
 }
 
 /** Contract for converting an IAIExplanation into a formatted string. */

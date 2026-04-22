@@ -6,7 +6,6 @@ import { HoverFormatter } from "./utils/HoverFormatter";
 import { AIHoverProvider } from "./providers/AIHoverProvider";
 import { FileSaveAnalysisProvider } from "./providers/FileSaveAnalysisProvider";
 import { SOLIDCodeLensProvider } from "./providers/SOLIDCodeLensProvider";
-import { SetApiKeyCommand } from "./commands/SetApiKeyCommand";
 
 const SUPPORTED_LANGUAGES = [
   "typescript",
@@ -63,13 +62,6 @@ export function activate(context: vscode.ExtensionContext): void {
       vscode.languages.registerHoverProvider({ language, scheme: "file" }, hoverProvider)
     );
   }
-
-  const setApiKeyCommand = new SetApiKeyCommand();
-  context.subscriptions.push(
-    vscode.commands.registerCommand(SetApiKeyCommand.COMMAND_ID, () =>
-      setApiKeyCommand.execute()
-    )
-  );
 
   // ConfigService reads live on every call — no rebuild needed on config change.
   context.subscriptions.push(

@@ -3,5 +3,8 @@
 .gitattributes
 tsconfig.json
 src/**
-node_modules/**
 *.map
+node_modules/.bin/**
+node_modules/**/test/**
+node_modules/**/*.md
+node_modules/**/*.ts
