@@ -20,24 +20,50 @@ export class SOLIDAnalyzerService {
 
   async analyze(fileName: string, fileContent: string): Promise<ISOLIDAnalysis> {
     const provider = createOpenAI({ baseURL: this.baseUrl, apiKey: "ollama" });
+    const chunks = this.splitIntoChunks(fileContent);
 
-    const prompt = this.buildPrompt(fileName, fileContent);
 
     try {
-      const { text } = await generateText({
-        model: provider(this.model),
-        prompt,
-        maxOutputTokens: 400,
-        temperature: 0.1,
+      const chunkResults = await Promise.all(
+        chunks.map(chunk =>
+          generateText({
+            model: provider(this.model),
+            prompt: this.buildPrompt(fileName, chunk.code),
+            maxOutputTokens: 200,
+            temperature: 0.1,
+          }).then(({ text }) => this.parseResponse(fileName, text.trim(), chunk.startLine))
+            .catch(() => ({ file: fileName, issues: [], clean: true } as ISOLIDAnalysis))
+        )
+      );
+
+      const allIssues = chunkResults.flatMap(r => r.issues);
+      const seen = new Set<string>();
+      const dedupedIssues = allIssues.filter(issue => {
+        const key = issue.principle;
+        if (seen.has(key)) { return false; }
+        seen.add(key);
+        return true;
       });
 
-      const result = this.parseResponse(fileName, text.trim());
+      const result: ISOLIDAnalysis = { file: fileName, issues: dedupedIssues, clean: dedupedIssues.length === 0 };
       this.debugCallback?.(`Found ${result.issues.length} issues: ${result.issues.map(i => i.principle).join(", ") || "none"}`);
       return result;
     } catch (e) {
       this.debugCallback?.(`ERROR: ${String(e)}`);
       return { file: fileName, issues: [], clean: true };
     }
+  }
+
+  private splitIntoChunks(fileContent: string, maxLines = 80): Array<{ code: string; startLine: number }> {
+    const lines = fileContent.split("\n");
+    if (lines.length <= maxLines) {
+      return [{ code: fileContent, startLine: 1 }];
+    }
+    const chunks: Array<{ code: string; startLine: number }> = [];
+    for (let i = 0; i < lines.length; i += maxLines) {
+      chunks.push({ code: lines.slice(i, i + maxLines).join("\n"), startLine: i + 1 });
+    }
+    return chunks;
   }
 
   /** Set this to receive debug output in VS Code notifications. */
@@ -60,9 +86,9 @@ export class SOLIDAnalyzerService {
     );
   }
 
-  private parseResponse(fileName: string, rawText: string): ISOLIDAnalysis {
+  private parseResponse(fileName: string, rawText: string, startLine = 1): ISOLIDAnalysis {
     const issues: ICodeIssue[] = [];
-    const seen = new Set<string>();
+    const seen = new Set<string>(); // dedupe within same chunk
 
     const PATTERNS: Array<{ regex: RegExp; principle: ICodeIssue["principle"] }> = [
       { regex: /single\s*responsibility|multiple\s*responsibilit|too\s*many\s*responsibilit|does\s*too\s*many/i, principle: "S" },
@@ -92,7 +118,7 @@ export class SOLIDAnalyzerService {
             .replace(/^\d+\.\s*/, "")
             .replace(/^ISSUE\|[^|]+\|\d+\|/, "")
             .slice(0, 100);
-          issues.push({ principle, line: lineNum, message });
+          issues.push({ principle, line: lineNum ? startLine + lineNum - 1 : startLine, message });
           break;
         }
       }

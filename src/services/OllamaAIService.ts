@@ -33,11 +33,9 @@ export class OllamaAIService implements IAIService {
 
   protected buildPrompt(context: ISymbolContext): string {
     return (
-      `You are a code documentation assistant. Analyze the symbol "${context.word}" ` +
-      `in the following ${context.language} code snippet (line ${context.lineNumber + 1} is the focus):\n\n` +
-      `\`\`\`${context.language}\n${context.surroundingCode}\n\`\`\`\n\n` +
-      `Reply with ONLY valid JSON in this exact format (no markdown, no extra text):\n` +
-      `{"type":"function|class|variable|constant|interface|other","summary":"one sentence explaining what ${context.word} is","details":"1-2 sentences with additional context (optional)"}`
+      `Analyze "${context.word}" in this ${context.language} code:\n` +
+      `${context.surroundingCode}\n\n` +
+      `Reply ONLY with JSON: {"type":"function|class|variable|constant|interface|other","summary":"one sentence","details":"optional 1 sentence"}`
     );
   }
 

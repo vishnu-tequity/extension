@@ -46,7 +46,7 @@ export class HoverFormatter implements IHoverFormatter {
 
     lines.push("");
     lines.push("---");
-    lines.push("*CodeGuardian AI — Powered by Ollama (no internet needed)*");
+    lines.push("*CodeGuardian AI — Powered by Ollama*");
 
     return lines.join("\n");
   }

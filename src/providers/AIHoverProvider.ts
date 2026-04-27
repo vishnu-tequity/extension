@@ -90,6 +90,8 @@ export class AIHoverProvider implements vscode.HoverProvider {
     this.inFlight.add(cacheKey);
     this.lastCallAt = Date.now();
 
+    const statusBar = vscode.window.setStatusBarMessage("$(sync~spin) AI: analyzing...");
+
     try {
       const explanation = await this.aiService.explain(context);
       this.cache.set(cacheKey, explanation);
@@ -116,6 +118,7 @@ export class AIHoverProvider implements vscode.HoverProvider {
       return null;
     } finally {
       this.inFlight.delete(cacheKey);
+      statusBar.dispose();
     }
   }
 
